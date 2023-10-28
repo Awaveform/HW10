@@ -1,0 +1,125 @@
+from collections import UserDict
+
+
+class Field:
+    def __init__(self, value):
+        self.value = value
+
+    def __str__(self):
+        return str(self.value)
+
+
+class Name(Field):
+    pass
+
+
+class Phone(Field):
+    def __init__(self, value):
+        super().__init__(value)
+        if not len(value) == 10 or not value.isdigit():
+            raise ValueError("Phone number can only consist of 10 digits.")
+
+
+class Record:
+    def __init__(self, name):
+        self.name = Name(name)
+        self.phones = []
+
+    # реалізація класу
+    def add_phone(self, phone: str):
+        self.phones.append(phone)
+        print(f"Added phone: {phone}.")
+
+    def remove_phone(self, phone: str):
+        if del_phone := [number for number in self.phones if number == phone]:
+            self.phones.remove(phone)
+            print(f"Deleted phone: {del_phone}.")
+        else:
+            print(
+                f"Phone was not found: '{phone}', "
+                f"enter existing phone to delete."
+            )
+
+    def edit_phone(self, old_phone: str, new_phone: str):
+        if found_phones := [
+            number for number in self.phones if number == old_phone
+        ]:
+            self.phones[self.phones.index(found_phones[0])] = new_phone
+            print(f"Edited phone: {found_phones[0]} to {new_phone}.")
+        else:
+            raise ValueError(
+                f"Phone was not found: '{old_phone}', "
+                f"enter existing phone to edit."
+            )
+
+    def find_phone(self, phone: int):
+        if found := [numb for numb in self.phones if numb == phone]:
+            print(f"The phone was found: {found[0]}.")
+            return Phone(found[0])
+        else:
+            print(f"The phone wasn't found: {phone}.")
+
+    def __str__(self):
+        return f"Contact name: {self.name.value}, " \
+               f"phones: {'; '.join(p for p in self.phones)}"
+
+
+class AddressBook(UserDict):
+    def add_record(self, record_row):
+        # print(record)
+        self.data[record_row.name.value] = record_row
+        print(f"New record was added: {record_row.name}.")
+
+    def find(self, username):
+        for rec in self.data.values():
+            if rec.name.value == username:
+                print(f"The record was found: {username}.")
+                return rec
+        print(f"The record was not found: {username}.")
+        return None
+
+    def delete(self, username):
+        # if key := username.value in self.data:
+        #     del self.data[key]
+        for rec in self.data.values():
+            if rec.name.value == username:
+                del self.data[username]
+                print(f"The record was deleted: {username}.")
+                break
+        else:
+            print(f"The record was not found: {username}.")
+
+
+if __name__ == "__main__":
+    # Створення нової адресної книги
+    book = AddressBook()
+
+    # Створення запису для John
+    john_record = Record("John")
+    john_record.add_phone("1234567890")
+    john_record.add_phone("5555555555")
+
+    # Додавання запису John до адресної книги
+    book.add_record(john_record)
+
+    # Створення та додавання нового запису для Jane
+    jane_record = Record("Jane")
+    jane_record.add_phone("9876543210")
+    book.add_record(jane_record)
+
+    # Виведення всіх записів у книзі
+    for name, record in book.data.items():
+        print(record)
+
+    # Знаходження та редагування телефону для John
+    john = book.find("John")
+    john.edit_phone("1234567890", "1112223333")
+
+    print(john)  # Виведення: Contact name: John, phones: 1112223333; 5555555555
+
+    # Пошук конкретного телефону у записі John
+    found_phone = john.find_phone("5555555555")
+    print(f"{john.name}: {found_phone}")  # Виведення: 5555555555
+
+    # Видалення запису Jane
+    book.delete("Jane")
