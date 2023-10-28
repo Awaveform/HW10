@@ -14,10 +14,10 @@ class Name(Field):
 
 
 class Phone(Field):
-    def __init__(self, value):
-        super().__init__(value)
-        if not len(value) == 10 or not value.isdigit():
+    def __init__(self, phone):
+        if not len(phone) == 10 or not phone.isdigit():
             raise ValueError("Phone number can only consist of 10 digits.")
+        super().__init__(value=phone)
 
 
 class Record:
@@ -25,7 +25,6 @@ class Record:
         self.name = Name(name)
         self.phones = []
 
-    # реалізація класу
     def add_phone(self, phone: str):
         self.phones.append(phone)
         print(f"Added phone: {phone}.")
@@ -79,8 +78,6 @@ class AddressBook(UserDict):
         return None
 
     def delete(self, username):
-        # if key := username.value in self.data:
-        #     del self.data[key]
         for rec in self.data.values():
             if rec.name.value == username:
                 del self.data[username]
