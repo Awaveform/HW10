@@ -10,7 +10,8 @@ class Field:
 
 
 class Name(Field):
-    pass
+    def __init__(self, contact: str):
+        super().__init__(value=contact)
 
 
 class Phone(Field):
@@ -63,6 +64,10 @@ class Record:
 
 
 class AddressBook(UserDict):
+
+    def __init__(self):
+        super().__init__()
+
     def add_record(self, record_row):
         self.data[record_row.name.value] = record_row
         print(f"New record was added: {record_row.name}.")
