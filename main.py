@@ -26,13 +26,13 @@ class Record:
         self.phones = []
 
     def add_phone(self, phone: str):
-        self.phones.append(phone)
+        self.phones.append(Phone(phone))
         print(f"Added phone: {phone}.")
 
     def remove_phone(self, phone: str):
-        if del_phone := [number for number in self.phones if number == phone]:
-            self.phones.remove(phone)
-            print(f"Deleted phone: {del_phone}.")
+        if num := [number for number in self.phones if number.value == phone]:
+            self.phones.remove(num[0])
+            print(f"Deleted phone: {phone}.")
         else:
             print(
                 f"Phone was not found: '{phone}', "
@@ -40,21 +40,20 @@ class Record:
             )
 
     def edit_phone(self, old_phone: str, new_phone: str):
-        if found_phones := [
-            number for number in self.phones if number == old_phone
-        ]:
-            self.phones[self.phones.index(found_phones[0])] = new_phone
-            print(f"Edited phone: {found_phones[0]} to {new_phone}.")
+        if old := [number for number in self.phones if number.value == old_phone]:
+            ind = self.phones.index(old[0])
+            self.phones[ind] = Phone(new_phone)
+            print(f"Edited phone: {old_phone} to {new_phone}.")
         else:
             raise ValueError(
                 f"Phone was not found: '{old_phone}', "
                 f"enter existing phone to edit."
             )
 
-    def find_phone(self, phone: int):
-        if found := [numb for numb in self.phones if numb == phone]:
-            print(f"The phone was found: {found[0]}.")
-            return Phone(found[0])
+    def find_phone(self, phone: str):
+        if [numb for numb in self.phones if numb.value == phone]:
+            print(f"The phone was found: {phone}.")
+            return Phone(phone)
         else:
             print(f"The phone wasn't found: {phone}.")
 
@@ -65,7 +64,6 @@ class Record:
 
 class AddressBook(UserDict):
     def add_record(self, record_row):
-        # print(record)
         self.data[record_row.name.value] = record_row
         print(f"New record was added: {record_row.name}.")
 
