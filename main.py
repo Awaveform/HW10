@@ -60,7 +60,7 @@ class Record:
 
     def __str__(self):
         return f"Contact name: {self.name.value}, " \
-               f"phones: {'; '.join(p for p in self.phones)}"
+               f"phones: {'; '.join(p.value for p in self.phones)}"
 
 
 class AddressBook(UserDict):
